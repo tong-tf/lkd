@@ -1,19 +1,20 @@
-MOD_NAME := c6
+MOD_NAME := c8
 ifneq ($(KERNELRELEASE),)
 	obj-m := $(MOD_NAME).o
-	$(MOD_NAME)-objs := test.o
+	$(MOD_NAME)-objs := test.o test_list.o 
 else
 	KERNEL_DIR ?= /lib/modules/$(shell uname -r)/build
 	PWD := $(shell pwd)
-	MOD_FOUND := $(shell lsmod | grep ^$MOD_NAME | cut -d' ' -f1 | head -1)
+	MOD_FOUND := $(shell lsmod | grep ^$(MOD_NAME) | cut -d' ' -f1 | head -1)
 default:
 	$(MAKE) -C $(KERNEL_DIR) M=$(PWD) modules
 
 install:
-	# if [ "$(MOD_FOUND)" != "" ]; then \
-	# 	sudo rmmod $(MOD_NAME) \
-	# fi
+
 ifneq ($(MOD_FOUND),)
+	@if [ $(MOD_FOUND) != '' ]; then \
+		echo "hello" ;\
+	fi
 	sudo rmmod $(MOD_NAME)
 endif
 	sudo insmod $(MOD_NAME).ko
