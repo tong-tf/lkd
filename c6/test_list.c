@@ -50,6 +50,10 @@ void stack_destroy(struct stack *stack)
 }
 
 
+int stack_empty(struct stack *stack)
+{
+	return list_empty(&stack->in.list) && list_empty(&stack->out.list);
+}
 void stack_dump(struct stack *stack)
 {
 	char buf[128];  // FIX ME WON'T enough space.
@@ -62,7 +66,7 @@ void stack_dump(struct stack *stack)
 	}
 	LOG("in: %s\n", buf);
 	n = 0;
-	n += sprintf(buf+n, "out list: \n");
+	n += sprintf(buf+n, "out list: ");
 	list_for_each_entry(node, &stack->out.list, list){
 		n += sprintf(buf + n, "%d ", node->val);
 	}
@@ -81,4 +85,9 @@ void test_list(void)
 		stack_push(&stack, i);
 		stack_dump(&stack);
 	}
+	while(!stack_empty(&stack)){
+		stack_pop(&stack);
+		stack_dump(&stack);
+	}
+	stack_destroy(&stack);
 }
