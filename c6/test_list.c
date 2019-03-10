@@ -32,6 +32,7 @@ void stack_push(struct stack *stack, int val)
 		LOG("kmalloc failed\n");
 		return;
 	}
+	node->val = val;
 	list_add(&node->list, &stack->in.list);
 }
 
@@ -54,16 +55,19 @@ void stack_dump(struct stack *stack)
 	char buf[128];  // FIX ME WON'T enough space.
 	int n = 0;
 	struct node* node;
-	n = sprintf(buf+n, "in list: \n");
+	LOG("stack internal status\n");
+	n += sprintf(buf+n, "in list: ");
 	list_for_each_entry(node, &stack->in.list, list){
-		n = sprintf(buf + n, "%d ", node->val);
+		n += sprintf(buf + n, "%d ", node->val);
 	}
-	n = sprintf(buf+n, "out list: \n");
-	list_for_each_entry(node, &stack->in.list, list){
-		n = sprintf(buf + n, "%d ", node->val);
+	LOG("in: %s\n", buf);
+	n = 0;
+	n += sprintf(buf+n, "out list: \n");
+	list_for_each_entry(node, &stack->out.list, list){
+		n += sprintf(buf + n, "%d ", node->val);
 	}
-	n = sprintf(buf+n, "\n");
-	LOG("stack internal status, %s\n", buf);
+	LOG("out: %s\n", buf);
+	
 }
 
 
